@@ -38,7 +38,7 @@ end
 
 local nn = require "nn"
 
-width = 16		--入力画像の辺の長さ
+width = 28		--入力画像の辺の長さ
 classes = 10	--分類クラス数
 
 mlp = nn.Sequential()

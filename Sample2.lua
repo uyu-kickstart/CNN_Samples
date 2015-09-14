@@ -37,7 +37,7 @@ end
 
 local nn = require "nn"
 
-width = 16		--入力の横幅
+width = 28		--入力の横幅
 classes = 10	--分類クラス数
 
 mlp = nn.Sequential()
