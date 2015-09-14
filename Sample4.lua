@@ -87,4 +87,4 @@ io.write("test recognize : ")
 io.write(count/testdata.size() * 100)
 print(" %")
 
-torch.save("model_data_1",mlp)
+torch.save("model_data_4",mlp)

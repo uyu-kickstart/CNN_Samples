@@ -41,7 +41,7 @@ width = 28		--入力画像の辺の長さ
 classes = 10	--分類クラス数
 
 mlp = nn.Sequential()
-mlp:add(nn.SpatialConvolutionMM(1, 1*4, 5, 5))	--(channel_in, channel_out, kW, kH)
+mlp:add(nn.SpatialConvolutionMM(1, 1*4, 5, 5,1,1,0,0))	--(channel_in, channel_out, kW, kH)
 mlp:add(nn.ReLU())
 --mlp:add(nn.Dropout(0.2))
 mlp:add(nn.SpatialMaxPooling(3,3))	--(kW, kH)
@@ -83,4 +83,4 @@ io.write("test recognize : ")
 io.write(count/testdata.size() * 100)
 print(" %")
 
-torch.save("model_data_1",mlp)
+torch.save("model_data_3",mlp)

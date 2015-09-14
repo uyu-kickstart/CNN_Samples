@@ -41,10 +41,10 @@ width = 28		--入力の横幅
 classes = 10	--分類クラス数
 
 mlp = nn.Sequential()
-mlp:add(nn.SpatialConvolutionMM(1, 1*1, 5, 5))	--(channel_in, channel_out, kW, kH)
+mlp:add(nn.SpatialConvolutionMM(1, 1*1, 5, 5,1,1,0,0))	--(channel_in, channel_out, kW, kH)
 mlp:add(nn.ReLU())
 --mlp:add(nn.Dropout(0.2))
-mlp:add(nn.SpatialMaxPooling(3,3))	--(kW, kH)
+mlp:add(nn.SpatialMaxPooling(3,3,1,1,0,0))	--(kW, kH)
 mlp:add(nn.Reshape(1*(width-6)*(width-6)))
 mlp:add(nn.Linear(1*(width-6)*(width-6), 2*classes))
 mlp:add(nn.ReLU())
