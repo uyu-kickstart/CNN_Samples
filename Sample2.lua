@@ -57,7 +57,7 @@ print(mlp)
 criterion = nn.ClassNLLCriterion()
 
 trainer = nn.StochasticGradient(mlp, criterion)
-trainer.maxIteration = 50
+trainer.maxIteration = 100
 trainer.learningRate = 0.005
 trainer:train(traindata)
 

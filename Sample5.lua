@@ -2,11 +2,8 @@
 カーネルのサイズ5*5,カーネルの枚数3+2
 input->(1)->(2)->(3)->(4)->(5)->output
 input 1*W*W (W = 16, 24, 28, 32)
-(1) たたみ込み	ReLU	filter:2	karnel:7*7 	zeroPad:なし	output:2*(W-6)*(W-6)
-(2) たたみ込み	ReLU	filter:4	karnel:3*3	zeroPad:なし	output:8*(W-8)*(W-8)
-(3) Maxプーリング						karnel:3*3	zeroPad:なし	output:8*(W-10)*(W-10)
-(4) 全結合層		ReLU										output:classes*2
-(5) 全結合層		(Log)SoftMax								output:classes
+(1) 全結合層		ReLU										output:classes*3
+(2) 全結合層		(Log)SoftMax								output:classes
 誤差関数:交差エントロピー
 ]]
 
@@ -14,7 +11,7 @@ local mnist = require "mnist"
 
 local trainset = mnist.traindataset()
 local testset = mnist.testdataset()
-local debug_input = torch.Tensor(1,28,28):uniform()
+--local debug_input = torch.Tensor(1,28,28):uniform()
 
 local traindata = {}
 local data = trainset.data:double() / 255
@@ -42,18 +39,11 @@ width = 28		--入力画像の辺の長さ
 classes = 10	--分類クラス数
 
 mlp = nn.Sequential()
-mlp:add(nn.SpatialConvolutionMM(1, 1*2, 7, 7))	--(channel_in, channel_out, kW, kH)
-mlp:add(nn.ReLU())
---mlp:add(nn.Dropout(0.2))
-mlp:add(nn.SpatialConvolutionMM(2, 2*4, 3, 3))
-mlp:add(nn.ReLU())
---mlp:add(nn.Dropout(0.3))
-mlp:add(nn.SpatialMaxPooling(3,3,1,1,0,0))	--(kW, kH)
-mlp:add(nn.Reshape(2 * 4 * (width-10) * (width-10)))
-mlp:add(nn.Linear(2 * 4 * (width-10) * (width-10), 2*classes))
+mlp:add(nn.Reshape(1*width*width))
+mlp:add(nn.Linear(1*width*width, 3*classes))
 mlp:add(nn.ReLU())
 --mlp:add(nn.Dropout(0.5))
-mlp:add(nn.Linear(2*classes, classes))
+mlp:add(nn.Linear(3*classes, classes))
 mlp:add(nn.LogSoftMax())
 
 print(mlp)
@@ -61,7 +51,7 @@ print(mlp)
 criterion = nn.ClassNLLCriterion()
 
 trainer = nn.StochasticGradient(mlp, criterion)
-trainer.maxIteration = 50
+trainer.maxIteration = 10000
 trainer.learningRate = 0.005
 trainer:train(traindata)
 
@@ -87,4 +77,4 @@ io.write("test recognize : ")
 io.write(count/testdata.size() * 100)
 print(" %")
 
-torch.save("model_data_4",mlp)
+torch.save("model_data_5",mlp)
