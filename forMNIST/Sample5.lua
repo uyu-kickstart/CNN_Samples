@@ -51,14 +51,21 @@ print(mlp)
 criterion = nn.ClassNLLCriterion()
 
 trainer = nn.StochasticGradient(mlp, criterion)
-trainer.maxIteration = 10000
+trainer.maxIteration = 50
 trainer.learningRate = 0.005
 trainer:train(traindata)
 
 count = 0
 for i=1,traindata.size() do
-	max,idx = mlp:forward(traindata[i][1]):exp():max(1)
-	if idx[1] == traindata[i][2] then
+	out = mlp:forward(traindata[i][1]):exp()
+	max, idx = 0
+	for j=1,classes do
+		if out[1][j] > max then 
+			max = out[1][j]
+			idx = j
+		end
+	end
+	if idx == traindata[i][2] then
 		count = count + 1
 	end
 end
@@ -68,8 +75,15 @@ print(" %")
 
 count = 0
 for i=1,testdata.size() do
-	max,idx = mlp:forward(testdata[i][1]):exp():max(1)
-	if idx[1] == testdata[i][2] then
+	out = mlp:forward(testdata[i][1]):exp()
+	max,idx = 0
+	for j=1,10 do
+		if out[1][j] > max then 
+			max = out[1][j]
+			idx = j
+		end
+	end
+	if idx == testdata[i][2] then
 		count = count + 1
 	end
 end
