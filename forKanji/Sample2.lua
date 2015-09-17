@@ -3,8 +3,7 @@
 input->(1)->(2)->(3)->(4)->(5)->output
 input 1*W*W (W = 16, 24, 28, 32)
 (1) たたみ込み	ReLU	filter:4	karnel:7*7 	zeroPad:なし	output:4*(W-6)*(W-6)
-(2) たたみ込み	ReLU	filter:3	karnel:5*5	zeroPad:なし	output:12*(W-10)*(W-10)
-(3) Maxプーリング						karnel:3*3	zeroPad:なし	output:12*(W-12)*(W-12)
+(3) Maxプーリング						karnel:3*3	zeroPad:なし	output:4*(W-8)*(W-8)
 (4) 全結合層		ReLU										output:classes*3
 (5) 全結合層		(Log)SoftMax								output:classes
 誤差関数:交差エントロピー
@@ -45,12 +44,9 @@ mlp = nn.Sequential()
 mlp:add(nn.SpatialConvolutionMM(1, 1*4, 7, 7,1,1,0,0))	--(channel_in, channel_out, kW, kH)
 mlp:add(nn.ReLU())
 --mlp:add(nn.Dropout(0.2))
-mlp:add(nn.SpatialConvolutionMM(4, 3*4, 5, 5,1,1,0,0))
-mlp:add(nn.ReLU())
---mlp:add(nn.Dropout(0.3))
 mlp:add(nn.SpatialMaxPooling(3,3,1,1,0,0))	--(kW, kH)
-mlp:add(nn.Reshape(3 * 4 * (width-12) * (width-12)))
-mlp:add(nn.Linear(3 * 4 * (width-12) * (width-12), 3*classes))
+mlp:add(nn.Reshape(4 * (width-8) * (width-8)))
+mlp:add(nn.Linear(4 * (width-8) * (width-8), 3*classes))
 mlp:add(nn.ReLU())
 --mlp:add(nn.Dropout(0.5))
 mlp:add(nn.Linear(3*classes, classes))
